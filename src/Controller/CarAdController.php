@@ -1,0 +1,209 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\CarAd;
+use App\Entity\Garage;
+use App\Repository\CarAdRepository;
+use App\Repository\GarageRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface as EMI;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+
+class CarAdController extends AbstractController
+{
+    /**
+     * Exception to naming convention for non-auth-user
+     * @Route("/api/classified", name="classified", methods={"GET"})
+     * 
+     */
+    public function index(CarAdRepository $repo): Response
+    {
+        $classifieds = $repo->findAll();
+
+        $repo->findAll();
+
+        $data = [
+            "ads" => $classifieds,
+        ];
+
+        return $this->json(
+            $data,
+            200,
+            [],
+            [
+                // app Entity CarAd "classified" groups
+                "groups" => [
+                    "classified"
+                ]
+            ]
+        );
+    }
+
+    /**
+     * @Route("/api/ads/byuser", name="ads_user", methods={"GET"})
+     * @Route("/api/ads/garage/{id}", name="ads_garage", methods={"GET"})
+     * 
+     */
+    public function ads(UserInterface $currentUser, Garage $garage = null): Response
+    {
+
+        if (!$garage) {
+            //if user wants to get all their ads
+            $classifieds = $currentUser->getCarAds();
+        } else {
+            if ($currentUser == $garage->getUser()) {
+                //if user wants to get all their ads by garage
+                $classifieds = $garage->getCarAds();
+            } else {
+                /**
+                 * if user manages to place a wrong garage id 
+                 * give them, all their ads instead
+                 */
+                $classifieds = $currentUser->getCarAds();
+            }
+        }
+
+        $data = ["ads" => $classifieds];
+        return $this->json(
+            $data,
+            200,
+            [],
+            [
+                // app Entity CarAd "classified" groups
+                "groups" => [
+                    "classified"
+                ]
+            ]
+        );
+    }
+
+
+    /**
+     * @Route("/api/ads/new/{garage_id}", name="new_ad", methods={"POST"})
+     * 
+     */
+    public function new(GarageRepository $gRepo, $garage_id, Request $req, SerializerInterface $serializer, EMI $emi, UserInterface $currentUser): Response
+    {
+        // ONLY AN OWNER CAN REGISTER A NEW CAR AD
+        if (in_array("ROLE_OWNER", $currentUser->getRoles())) {
+
+            $data = ["Car_Ad_New" => "That garage doesn't exist"];
+            $garage = $gRepo->find($garage_id);
+            if ($garage->getUser() == $currentUser) {
+                $carAdJson = $req->getContent();
+                $carAd = $serializer->deserialize($carAdJson, CarAd::class, 'json');
+                $carAd->setUser($currentUser);
+                $carAd->setGarage($garage);
+
+                dd($carAd);
+                $emi->persist($carAd);
+                $emi->flush();
+
+                $data = ["Car_Ad_New" => "success"];
+            }
+            return $this->json(
+                $data,
+                200,
+                [],
+                [
+                    "groups" => [
+                        "classified"
+                    ]
+                ]
+            );
+        } else {
+            $data = ["user_register" => "SOO SORRY, YOU DON'T HAVE PERMISSION FOR THAT"];
+            return $this->json(
+                $data,
+                200
+            );
+        }
+    }
+
+    /**
+     * @Route("/api/ads/edit/{id}", name="edit_ad", methods={"PATCH"})
+     * 
+     */
+    public function edit(CarAd $carAd, Request $req, SerializerInterface $serializer, EMI $emi, UserInterface $currentUser): Response
+    {
+        // ONLY AN OWNER CAN EDIT A CAR AD
+        if (in_array("ROLE_OWNER", $currentUser->getRoles())) {
+
+            $data = ["Car_Ad_Edit" => "That car ad doesn't exist"];
+
+            if ($carAd->getUser() == $currentUser) {
+                $carAdJson = $req->getContent();
+                $carAdObj = $serializer->deserialize($carAdJson, CarAd::class, 'json');
+
+                // get and set
+                $carAd->setTitle($carAdObj->getTitle());
+                $carAd->setDescription($carAdObj->getDescription());
+                $carAd->setYear($carAdObj->getYear());
+                $carAd->setKilometers($carAdObj->getKilometers());
+                $carAd->setBrand($carAdObj->getBrand());
+                $carAd->setModel($carAdObj->getModel());
+                $carAd->setImage($carAdObj->getImage());
+
+                $emi->persist($carAd);
+                $emi->flush();
+
+                $data = ["Car_Ad_Edit" => "success"];
+            }
+            return $this->json(
+                $data,
+                200,
+                [],
+                [
+                    "groups" => [
+                        "classified"
+                    ]
+                ]
+            );
+        } else {
+            $data = ["car_edit" => "SOO SORRY, YOU DON'T HAVE PERMISSION FOR THAT"];
+            return $this->json(
+                $data,
+                200
+            );
+        }
+    }
+
+    /**
+     * @Route("/api/ads/remove/{id}", name="remove_carAd", methods={"DELETE"})
+     * 
+     */
+    public function remove(CarAd $carAd, EMI $emi, UserInterface $currentUser): Response
+    {
+        //ONLY A OWNER HAS RIGHTS TO DELETE THEIR OWN GARAGE DATA.
+        if ($currentUser == $carAd->getUser()) {
+
+            $emi->remove($carAd);
+            $emi->flush();
+
+            $data = ["CarAd_Delete" => "success"];
+
+            return $this->json(
+                $data,
+                200,
+                [],
+                [
+                    "groups" => [
+                        "garage"
+                    ]
+                ]
+            );
+        } else {
+            $data = ["CarAd_Delete" => "SOO SORRY, YOU DON'T HAVE PERMISSION FOR THAT"];
+            return $this->json(
+                $data,
+                200
+            );
+        }
+    }
+}
