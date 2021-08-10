@@ -27,8 +27,10 @@ class GarageController extends AbstractController
         $isOwner = in_array("ROLE_OWNER", $currentUser->getRoles());
         // Only an Admin can have access to all garage data
         if ($isAdmin || $isOwner) {
-            $garages = $repo->findAll();
-            if ($isOwner && !$isAdmin) {
+            if ($isAdmin) {
+                $garages = $repo->findAll();
+            }
+            if ($isOwner) {
                 $garages = $currentUser->getGarages();
             }
             $data = ["garages" => $garages];
