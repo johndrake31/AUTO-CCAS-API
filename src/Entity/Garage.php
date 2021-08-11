@@ -56,6 +56,16 @@ class Garage
      */
     private $carAds;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $city;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $postelcode;
+
     public function __construct()
     {
         $this->carAds = new ArrayCollection();
@@ -140,6 +150,30 @@ class Garage
                 $carAd->setGarage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostelcode(): ?int
+    {
+        return $this->postelcode;
+    }
+
+    public function setPostelcode(int $postelcode): self
+    {
+        $this->postelcode = $postelcode;
 
         return $this;
     }
