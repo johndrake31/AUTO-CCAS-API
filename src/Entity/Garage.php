@@ -58,11 +58,13 @@ class Garage
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"garage"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"garage"})
      */
     private $postelcode;
 
