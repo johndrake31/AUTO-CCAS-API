@@ -102,16 +102,21 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/user/index/{id}", name="show_user", methods={"GET"})
+     * @Route("/api/user/index/{id}", name="show_user_by_id", methods={"GET"})
+     * @Route("/api/user/show", name="show_user", methods={"GET"})
      * 
      */
-    public function show(User $user, UserInterface $currentUser): Response
+    public function show(User $user = null, UserInterface $currentUser): Response
     {
+        if (!$user) {
+            $user = $currentUser;
+        }
+
         $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
         $data = ["user_index" => "SOO SORRY, YOU DON'T HAVE PERMISSION FOR THAT"];
 
         //A USER HAS ACCESS TO THEIR OWN DATA, AS WEL AS AN ADMIN.
-        if ($currentUser->getUserIdentifier() == $user->getUserIdentifier() || $isAdmin) {
+        if ($currentUser->getUserIdentifier() || $isAdmin) {
             $data = ["user_index" => $user];
             //if varified
             return $this->json(
