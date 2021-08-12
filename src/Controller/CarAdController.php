@@ -50,8 +50,9 @@ class CarAdController extends AbstractController
      * @Route("/api/ads/garage/{id}", name="ads_garage", methods={"GET"})
      * 
      */
-    public function ads(Garage $garage = null, UserInterface $currentUser): Response
+    public function ads(GarageRepository $repo, UserInterface $currentUser = null, $id): Response
     {
+        $garage = $repo->find($id);
 
         if (!$garage) {
             //if user wants to get all their ads
