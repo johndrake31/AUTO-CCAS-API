@@ -45,6 +45,18 @@ class Garage
     private $telephone;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"garage"})
+     */
+    private $city;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups({"garage"})
+     */
+    private $postelcode;
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="garages")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"garage"})
@@ -56,17 +68,7 @@ class Garage
      */
     private $carAds;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"garage"})
-     */
-    private $city;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"garage"})
-     */
-    private $postelcode;
 
     public function __construct()
     {

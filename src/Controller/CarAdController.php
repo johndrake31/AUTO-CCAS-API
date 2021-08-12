@@ -50,7 +50,7 @@ class CarAdController extends AbstractController
      * @Route("/api/ads/garage/{id}", name="ads_garage", methods={"GET"})
      * 
      */
-    public function ads(UserInterface $currentUser, Garage $garage = null): Response
+    public function ads(Garage $garage = null, UserInterface $currentUser): Response
     {
 
         if (!$garage) {
