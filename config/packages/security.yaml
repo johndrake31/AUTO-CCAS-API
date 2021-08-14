@@ -16,6 +16,8 @@ security:
         api_token_refresh:
             pattern: ^/api/token/refresh
             stateless: true
+            anonymous: true
+
             
         
         login:
