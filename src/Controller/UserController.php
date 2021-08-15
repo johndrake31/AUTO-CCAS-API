@@ -140,22 +140,22 @@ class UserController extends AbstractController
 
     /**
      * @Route("/api/user/edit/{id}", name="edit_user", methods={"PATCH"})
+     * @Route("/api/user/edit/profile", name="profile", methods={"PATCH"})
      * 
      */
-    public function edit(User $user, Request $req, SerializerInterface $serializer, EMI $emi, UserPassHashInter $hash, UserInterface $currentUser): Response
+    public function edit(User $user, Request $req, SerializerInterface $serializer, EMI $emi, UserInterface $currentUser): Response
     {
         $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
         //A USER HAS ACCESS TO THEIR OWN DATA, AS WEL AS AN ADMIN.
+
         if ($currentUser->getUserIdentifier() == $user->getUserIdentifier()) {
             $jsonUser = $req->getContent();
             $userObj = $serializer->deserialize($jsonUser, User::class, 'json');
 
-            $hashedPassword = $hash->hashPassword($user, $userObj->getPassword());
-
             $user->setFirstname($userObj->getFirstname());
             $user->setLastname($userObj->getLastname());
             $user->setTelephone($userObj->getTelephone());
-            $user->setPassword($hashedPassword);
+            $user->setEmail($userObj->getEmail());
             //only an 
             if (!$isAdmin) {
                 //An added layer to protect against json hack to change roles manually.
