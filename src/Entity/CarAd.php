@@ -63,11 +63,10 @@ class CarAd
     private $fuel;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Garage::class, inversedBy="carAds")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer")
      * @Groups({"classified"})
      */
-    private $garage;
+    private $price;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -76,17 +75,22 @@ class CarAd
     private $image;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Garage::class, inversedBy="carAds")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"classified"})
+     */
+    private $garage;
+
+
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="carAds")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"classified"})
      */
     private $user;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"classified"})
-     */
-    private $price;
+
 
     public function getId(): ?int
     {

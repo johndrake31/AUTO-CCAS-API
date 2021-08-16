@@ -100,8 +100,6 @@ class CarAdController extends AbstractController
                 $carAd = $serializer->deserialize($carAdJson, CarAd::class, 'json');
                 $carAd->setUser($currentUser);
                 $carAd->setGarage($garage);
-
-                dd($carAd);
                 $emi->persist($carAd);
                 $emi->flush();
 
