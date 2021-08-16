@@ -46,6 +46,40 @@ class CarAdController extends AbstractController
     }
 
     /**
+     * Exception to naming convention for non-auth-user
+     * @Route("/api/ads/show/{id}", name="show_ad", methods={"GET"})
+     * 
+     */
+    public function show(CarAd $carAd, UserInterface $currentUser): Response
+    {
+        $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
+        $data = ["user_index" => "SOO SORRY, YOU DON'T HAVE PERMISSION FOR THAT"];
+
+        //A USER HAS ACCESS TO THEIR OWN AD DATA, AS WEL AS AN ADMIN.
+        if ($currentUser->getId() == $carAd->getUser()->getId() || $isAdmin) {
+            $data = ["car_ad_index" => $carAd];
+            //if varified
+            return $this->json(
+                $data,
+                200,
+                [],
+                [
+                    "groups" => [
+                        "classified"
+                    ]
+                ]
+            );
+        } else {
+            //if no permissions
+            return $this->json(
+                $data,
+                200
+            );
+        }
+    }
+
+
+    /**
      * @Route("/api/ads/byuser", name="ads_user", methods={"GET"})
      * @Route("/api/ads/garage/{id}", name="ads_garage", methods={"GET"})
      * 
