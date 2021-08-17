@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+
 class CarAdController extends AbstractController
 {
     /**
@@ -135,26 +136,27 @@ class CarAdController extends AbstractController
                 $carAd = $serializer->deserialize($carAdJson, CarAd::class, 'json');
 
                 // NEW IMAGE AREA // IF IT GOES TO SHIT DELETE THIS
-                
-                    //START IMAGE SUBMISSION
-                    /** @var UploadedFile $imageFile */
-                    $imageFile = $carAd->getImage();
 
-                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    // this is needed to safely include the file name as part of the URL
-                    $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-                    $imageFile->move(
-                        $this->getParameter('car_directory'),
-                        $newFilename
-                    );
-                }
+
+                //START IMAGE SUBMISSION
+                /** @var UploadedFile $imageFile */
+                $imageFile = $carAd->getImage();
+
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                $imageFile->move(
+                    $this->getParameter('car_directory'),
+                    $newFilename
+                );
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+
                 $carAd->setImage($newFilename);
 
                 //END OF IMAGE AREA
-                
-
-
                 $carAd->setUser($currentUser);
                 $carAd->setGarage($garage);
                 $emi->persist($carAd);
