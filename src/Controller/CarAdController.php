@@ -13,7 +13,8 @@ use Doctrine\ORM\EntityManagerInterface as EMI;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CarAdController extends AbstractController
 {
@@ -122,7 +123,7 @@ class CarAdController extends AbstractController
      * @Route("/api/ads/new/{garage_id}", name="new_ad", methods={"POST"})
      * 
      */
-    public function new(GarageRepository $gRepo, $garage_id, Request $req, SerializerInterface $serializer, EMI $emi, UserInterface $currentUser): Response
+    public function new(GarageRepository $gRepo, $garage_id, Request $req, SerializerInterface $serializer, EMI $emi, UserInterface $currentUser, SluggerInterface $slugger): Response
     {
         // ONLY AN OWNER CAN REGISTER A NEW CAR AD
         if (in_array("ROLE_OWNER", $currentUser->getRoles())) {
@@ -132,6 +133,27 @@ class CarAdController extends AbstractController
             if ($garage->getUser() == $currentUser) {
                 $carAdJson = $req->getContent();
                 $carAd = $serializer->deserialize($carAdJson, CarAd::class, 'json');
+
+                // NEW IMAGE AREA // IF IT GOES TO SHIT DELETE THIS
+                
+                    //START IMAGE SUBMISSION
+                    /** @var UploadedFile $imageFile */
+                    $imageFile = $carAd->getImage();
+
+                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                    $imageFile->move(
+                        $this->getParameter('car_directory'),
+                        $newFilename
+                    );
+                }
+                $carAd->setImage($newFilename);
+
+                //END OF IMAGE AREA
+                
+
 
                 $carAd->setUser($currentUser);
                 $carAd->setGarage($garage);
