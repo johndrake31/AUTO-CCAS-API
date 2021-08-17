@@ -131,8 +131,8 @@ class CarAdController extends AbstractController
             $garage = $gRepo->find($garage_id);
             if ($garage->getUser() == $currentUser) {
                 $carAdJson = $req->getContent();
-                dd($carAdJson);
                 $carAd = $serializer->deserialize($carAdJson, CarAd::class, 'json');
+
                 $carAd->setUser($currentUser);
                 $carAd->setGarage($garage);
                 $emi->persist($carAd);
