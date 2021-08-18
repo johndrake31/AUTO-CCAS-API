@@ -258,7 +258,7 @@ class CarAdController extends AbstractController
 
             $returnData = $req->getContent();
 
-            $data = ["CarAd_image" => "success"];
+            $data = ["CarAd_image" => $returnData];
 
             return $this->json(
                 $data,
