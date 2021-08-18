@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface as EMI;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -261,10 +262,12 @@ class CarAdController extends AbstractController
 
 
     /**
-     * @Route("/api/image", name="image_carAd", methods={"POST"})
+     * 
+     * adds image to newly created ads
+     * @Route("/api/image/{id}", name="image_carAd", methods={"POST"})
      * 
      */
-    public function image(Request $req, SluggerInterface $slugger): Response
+    public function image(CarAd $carAd, Request $req, SluggerInterface $slugger, EntityManagerInterface $em): Response
     {
         // 
         // UserInterface $currentUser
@@ -283,7 +286,9 @@ class CarAdController extends AbstractController
                 $newFilename
             );
 
-
+            $carAd->setImage($newFilename);
+            $em->persist($carAd);
+            $em->flush();
 
             $data = ["CarAd_image" => $newFilename];
 
