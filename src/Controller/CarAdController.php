@@ -248,15 +248,15 @@ class CarAdController extends AbstractController
      * @Route("/api/image", name="image_carAd", methods={"POST"})
      * 
      */
-    public function image(): Response
+    public function image(Request $req,): Response
     {
+        // SerializerInterface $serializer
         // UserInterface $currentUser
 
-        //ONLY A OWNER HAS RIGHTS TO DELETE THEIR OWN GARAGE DATA.
         // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
         if (true) {
 
-
+            $returnData = $req->getContent();
 
             $data = ["CarAd_image" => "success"];
 
