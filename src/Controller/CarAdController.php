@@ -249,7 +249,7 @@ class CarAdController extends AbstractController
      * @Route("/api/image", name="image_carAd", methods={"POST"})
      * 
      */
-    public function image(Request $req, SerializerInterface $serializer): Response
+    public function image(Request $req, SerializerInterface $serializer, SluggerInterface $slugger): Response
     {
         // 
         // UserInterface $currentUser
@@ -257,17 +257,20 @@ class CarAdController extends AbstractController
         // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
         if (true) {
 
-            dd($req->files->get('image'));
+            $imageFile = $req->files->get('image');
+
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            // this is needed to safely include the file name as part of the URL
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+            $imageFile->move(
+                $this->getParameter('car_directory'),
+                $newFilename
+            );
 
 
-            $returnData =
-                $serializer->deserialize(
-                    $req->getContent(),
-                    Image::class,
-                    'file'
-                );
 
-            $data = ["CarAd_image" => $returnData];
+            $data = ["CarAd_image" => "image upload a success"];
 
             return $this->json(
                 $data,
