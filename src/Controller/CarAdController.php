@@ -257,7 +257,7 @@ class CarAdController extends AbstractController
         // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
         if (true) {
 
-            dd($req->getContent());
+            dd($req->files->get('image'));
 
             $returnData =
                 $serializer->deserialize(
