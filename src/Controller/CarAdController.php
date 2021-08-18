@@ -270,7 +270,7 @@ class CarAdController extends AbstractController
 
 
 
-            $data = ["CarAd_image" => "image upload a success"];
+            $data = ["CarAd_image" => $newFilename];
 
             return $this->json(
                 $data,
