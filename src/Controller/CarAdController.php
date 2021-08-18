@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CarAd;
 use App\Entity\Garage;
+use App\Entity\Image;
 use App\Repository\CarAdRepository;
 use App\Repository\GarageRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -248,15 +249,20 @@ class CarAdController extends AbstractController
      * @Route("/api/image", name="image_carAd", methods={"POST"})
      * 
      */
-    public function image(Request $req,): Response
+    public function image(Request $req, SerializerInterface $serializer): Response
     {
-        // SerializerInterface $serializer
+        // 
         // UserInterface $currentUser
 
         // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
         if (true) {
 
-            $returnData = $req->getContent();
+            $returnData =
+                $serializer->deserialize(
+                    $req->getContent(),
+                    Image::class,
+                    'json'
+                );
 
             $data = ["CarAd_image" => $returnData];
 
