@@ -68,3 +68,4 @@ security:
         - { path: ^/api/register, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/user, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/ads, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/image, roles: IS_AUTHENTICATED_ANONYMOUSLY }

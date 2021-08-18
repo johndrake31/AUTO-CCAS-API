@@ -242,4 +242,34 @@ class CarAdController extends AbstractController
             );
         }
     }
+
+
+    /**
+     * @Route("/api/image", name="image_carAd", methods={"POST"})
+     * 
+     */
+    public function image(): Response
+    {
+        // UserInterface $currentUser
+
+        //ONLY A OWNER HAS RIGHTS TO DELETE THEIR OWN GARAGE DATA.
+        // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
+        if (true) {
+
+
+
+            $data = ["CarAd_image" => "success"];
+
+            return $this->json(
+                $data,
+                200,
+            );
+        } else {
+            $data = ["CarAd_Image" => "SOO SORRY, YOU DON'T HAVE PERMISSION FOR THAT"];
+            return $this->json(
+                $data,
+                200
+            );
+        }
+    }
 }
