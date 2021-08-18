@@ -138,19 +138,19 @@ class CarAdController extends AbstractController
 
                 $carAd = $serializer->deserialize($carAdJson, CarAd::class, 'json');
 
-                //IMAGE START SECTION
-                $imageFile = $req->files->get('image');
+                // //IMAGE START SECTION
+                // $imageFile = $req->files->get('image');
 
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-                $imageFile->move(
-                    $this->getParameter('car_directory'),
-                    $newFilename
-                );
-                $carAd->setImage($newFilename);
-                // END IMAGE SECTION
+                // $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // // this is needed to safely include the file name as part of the URL
+                // $safeFilename = $slugger->slug($originalFilename);
+                // $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                // $imageFile->move(
+                //     $this->getParameter('car_directory'),
+                //     $newFilename
+                // );
+                // $carAd->setImage($newFilename);
+                // // END IMAGE SECTION
 
                 $carAd->setUser($currentUser);
                 $carAd->setGarage($garage);
@@ -264,7 +264,7 @@ class CarAdController extends AbstractController
      * @Route("/api/image", name="image_carAd", methods={"POST"})
      * 
      */
-    public function image(Request $req, SerializerInterface $serializer, SluggerInterface $slugger): Response
+    public function image(Request $req, SluggerInterface $slugger): Response
     {
         // 
         // UserInterface $currentUser
