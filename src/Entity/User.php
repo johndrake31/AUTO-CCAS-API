@@ -78,12 +78,14 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Garage::class, mappedBy="user", orphanRemoval=true)
      * @Groups({"userApi"})
+     * @Assert\NotBlank(allowNull = true)
      */
     private $garages;
 
     /**
      * @ORM\OneToMany(targetEntity=CarAd::class, mappedBy="user", orphanRemoval=true)
      * @Groups({"userApi"})
+     * @Assert\NotBlank(allowNull = true)
      */
     private $carAds;
 
