@@ -42,11 +42,11 @@ class UserController extends AbstractController
         if (in_array("ROLE_ADMIN", $currentUser->getRoles())) {
 
             $jsonUser = $req->getContent();
-            dd($jsonUser);
+            //dd($jsonUser);
             $user = $serializer->deserialize($jsonUser, User::class, 'json');
             $hashedPassword = $hash->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
-            // dd($user);
+            dd($user);
             $user->setRoles(["ROLE_OWNER"]);
             $emi->persist($user);
             $emi->flush();
