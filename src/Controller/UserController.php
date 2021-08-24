@@ -44,7 +44,7 @@ class UserController extends AbstractController
             $jsonUser = $req->getContent();
             //dd($jsonUser);
             $user = $serializer->deserialize($jsonUser, User::class, 'json');
-            dd($user);
+            //dd($user);
             $hashedPassword = $hash->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
             $user->setRoles(["ROLE_OWNER"]);
