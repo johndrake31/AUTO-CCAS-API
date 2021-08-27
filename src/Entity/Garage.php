@@ -34,25 +34,25 @@ class Garage
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"garage"})
+     * @Groups({"garage", "userApi"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"garage"})
+     * @Groups({"garage", "userApi"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"garage"})
+     * @Groups({"garage", , "userApi"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"garage"})
+     * @Groups({"garage", "userApi"})
      */
     private $postelcode;
 
