@@ -22,37 +22,37 @@ class Garage
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"garage", "userApi"})
+     * @Groups({"garage"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"garage", "userApi"})
+     * @Groups({"garage"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"garage", "userApi"})
+     * @Groups({"garage"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"garage", "userApi"})
+     * @Groups({"garage"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"garage", , "userApi"})
+     * @Groups({"garage"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"garage", "userApi"})
+     * @Groups({"garage"})
      */
     private $postelcode;
 
