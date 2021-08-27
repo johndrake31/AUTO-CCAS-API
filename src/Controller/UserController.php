@@ -196,7 +196,7 @@ class UserController extends AbstractController
     public function delete(User $user,  EMI $emi, UserInterface $currentUser): Response
     {
         $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
-        if ($currentUser->getUserIdentifier() != $user->getUserIdentifier() || $isAdmin) {
+        if ($isAdmin) {
             $emi->persist($user);
             $emi->flush();
 
