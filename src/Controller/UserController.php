@@ -197,7 +197,7 @@ class UserController extends AbstractController
     {
         $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
         if ($isAdmin) {
-            $emi->persist($user);
+            $emi->remove($user);
             $emi->flush();
 
             $data = ["user_delete" => "user is deleted"];
