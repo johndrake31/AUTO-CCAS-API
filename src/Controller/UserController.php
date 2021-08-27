@@ -149,7 +149,7 @@ class UserController extends AbstractController
         $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
         //A USER HAS ACCESS TO THEIR OWN DATA, AS WEL AS AN ADMIN.
 
-        if ($currentUser->getUserIdentifier() == $user->getUserIdentifier()) {
+        if ($currentUser->getUserIdentifier() == $user->getUserIdentifier() || $isAdmin) {
             $jsonUser = $req->getContent();
             $userObj = $serializer->deserialize($jsonUser, User::class, 'json');
 

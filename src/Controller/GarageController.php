@@ -97,8 +97,9 @@ class GarageController extends AbstractController
      */
     public function edit(Garage $garage, Request $req, SerializerInterface $serializer, EMI $emi, UserInterface $currentUser): Response
     {
-        //ONLY A OWNER HAS ACCESS TO EDIT THEIR OWN GARAGE DATA.
-        if ($currentUser->getId() == $garage->getUser()->getId()) {
+        $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
+        //ONLY A OWNER OR ADMIN HAS ACCESS TO EDIT THEIR OWN GARAGE DATA.
+        if ($currentUser->getId() == $garage->getUser()->getId() || $isAdmin) {
             $jsonGarage = $req->getContent();
             $garageObj = $serializer->deserialize($jsonGarage, Garage::class, 'json');
 
