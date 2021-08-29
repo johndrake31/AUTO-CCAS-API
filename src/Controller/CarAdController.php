@@ -278,23 +278,29 @@ class CarAdController extends AbstractController
 
         // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
         if (true) {
-
+            $s3 = new \Aws\S3\S3Client([
+                'version'  => '2006-03-01',
+                'region'   => 'eu-west-3',
+            ]);
+            $bucket = getenv('S3_CAR_IMAGES_CCAS') ?: die('No "S3_CAR_IMAGES_CCAS" config var in found in env!');
             $imageFile = $req->files->get('image');
-
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+
             // this is needed to safely include the file name as part of the URL
             $safeFilename = $slugger->slug($originalFilename);
             $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-            $imageFile->move(
-                $this->getParameter('car_directory'),
-                $newFilename
-            );
+            $upload = $s3->upload($bucket, $newFilename, fopen($imageFile, 'rb'), 'public-read');
 
-            $carAd->setImage($newFilename);
+            // $imageFile->move(
+            //     $this->getParameter('car_directory'),
+            //     $newFilename
+            // );
+            $s3Key = $upload->get('ObjectURL');
+            $carAd->setImage($s3Key);
             $em->persist($carAd);
             $em->flush();
 
-            $data = ["CarAd_image" => $newFilename];
+            $data = ["CarAd_image" => $s3Key];
 
             return $this->json(
                 $data,
