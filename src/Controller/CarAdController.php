@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CarAd;
 use App\Entity\Garage;
-use App\Entity\Image;
+
 use App\Repository\CarAdRepository;
 use App\Repository\GarageRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +15,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Symfony\Component\String\Slugger\SluggerInterface;
+
+
+
+
 
 
 class CarAdController extends AbstractController
