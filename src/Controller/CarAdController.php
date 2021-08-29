@@ -278,10 +278,12 @@ class CarAdController extends AbstractController
 
         // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
         if (true) {
+
             $s3 = new \Aws\S3\S3Client([
                 'version'  => '2006-03-01',
                 'region'   => 'eu-west-3',
             ]);
+
             $bucket = getenv('S3_CAR_IMAGES_CCAS') ?: die('No "S3_CAR_IMAGES_CCAS" config var in found in env!');
             $imageFile = $req->files->get('image');
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
