@@ -210,7 +210,7 @@ class CarAdController extends AbstractController
                 $emi->persist($carAd);
                 $emi->flush();
 
-                $data = ["Car_Ad_Edit" => "success"];
+                $data = ["Car_Ad_Edit" => $carAd];
             }
             return $this->json(
                 $data,
