@@ -173,8 +173,9 @@ class GarageController extends AbstractController
      */
     public function remove(Garage $garage, EMI $emi, UserInterface $currentUser): Response
     {
+        $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
         //ONLY A OWNER HAS RIGHTS TO DELETE THEIR OWN GARAGE DATA.
-        if ($currentUser->getId() == $garage->getUser()->getId()) {
+        if ($currentUser->getId() == $garage->getUser()->getId() || $isAdmin) {
 
             $emi->remove($garage);
             $emi->flush();
