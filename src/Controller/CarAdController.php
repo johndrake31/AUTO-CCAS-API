@@ -189,8 +189,10 @@ class CarAdController extends AbstractController
      */
     public function edit(CarAd $carAd, Request $req, SerializerInterface $serializer, EMI $emi, UserInterface $currentUser): Response
     {
-        // ONLY AN OWNER CAN EDIT A CAR AD
-        if (in_array("ROLE_OWNER", $currentUser->getRoles())) {
+        $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
+        $isOwner = in_array("ROLE_OWNER", $currentUser->getRoles());
+
+        if ($isOwner || $isAdmin) {
 
             $data = ["Car_Ad_Edit" => "That car ad doesn't exist"];
 
@@ -238,7 +240,10 @@ class CarAdController extends AbstractController
     public function remove(CarAd $carAd, EMI $emi, UserInterface $currentUser): Response
     {
         //ONLY A OWNER HAS RIGHTS TO DELETE THEIR OWN GARAGE DATA.
-        if ($currentUser == $carAd->getUser()) {
+        $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
+
+
+        if ($currentUser == $carAd->getUser() || $isAdmin) {
 
             $emi->remove($carAd);
             $emi->flush();
@@ -271,13 +276,12 @@ class CarAdController extends AbstractController
      * @Route("/api/image/{id}", name="image_carAd", methods={"POST"})
      * 
      */
-    public function image(CarAd $carAd, Request $req, SluggerInterface $slugger, EntityManagerInterface $em): Response
+    public function image(CarAd $carAd, Request $req, SluggerInterface $slugger, EntityManagerInterface $em, UserInterface $currentUser): Response
     {
-        // 
-        // UserInterface $currentUser
+        $isAdmin = in_array("ROLE_ADMIN", $currentUser->getRoles());
+        $isOwner = in_array("ROLE_OWNER", $currentUser->getRoles());
 
-        // if (in_array("ROLE_OWNER", $currentUser->getRoles()))
-        if (true) {
+        if ($isOwner || $isAdmin) {
 
             $s3 = new \Aws\S3\S3Client([
                 'version'  => '2006-03-01',
