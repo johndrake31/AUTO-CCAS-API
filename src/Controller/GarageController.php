@@ -106,6 +106,7 @@ class GarageController extends AbstractController
             $garage->setName($garageObj->getName());
             $garage->setAddress($garageObj->getAddress());
             $garage->setTelephone($garageObj->getTelephone());
+            $garage->setPostelcode($garageObj->getPostelcode());
 
             $emi->persist($garage);
             $emi->flush();
