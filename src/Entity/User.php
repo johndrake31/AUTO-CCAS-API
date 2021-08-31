@@ -29,12 +29,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="bigint")
+     * @Assert\Unique
      * @Groups({"userApi"})
      */
     private $siret;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Unique
      * @Groups({"userApi", "garage"})
      */
     private $username;
@@ -54,12 +56,15 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"userApi"})
+     * @Assert\Unique
+     * 
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"userApi"})
+     * 
      */
     private $telephone;
 
