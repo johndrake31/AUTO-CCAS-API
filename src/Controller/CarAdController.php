@@ -196,7 +196,7 @@ class CarAdController extends AbstractController
 
             $data = ["Car_Ad_Edit" => "That car ad doesn't exist"];
 
-            if ($carAd->getUser() == $currentUser) {
+            if ($carAd->getUser() == $currentUser || $isAdmin) {
                 $carAdJson = $req->getContent();
                 $carAdObj = $serializer->deserialize($carAdJson, CarAd::class, 'json');
 
