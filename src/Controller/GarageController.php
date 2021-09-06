@@ -54,7 +54,6 @@ class GarageController extends AbstractController
         }
     }
 
-
     /**
      * @Route("/api/garage/add", name="add_garage", methods={"POST"})
      * 
@@ -131,10 +130,6 @@ class GarageController extends AbstractController
             );
         }
     }
-
-
-
-
 
     /**
      * @Route("/api/garage/show/{id}", name="show_garage", methods={"GET"})
