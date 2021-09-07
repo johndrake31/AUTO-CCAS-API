@@ -283,30 +283,31 @@ class CarAdController extends AbstractController
 
         if ($isOwner || $isAdmin) {
 
-            $s3 = new \Aws\S3\S3Client([
-                'version'  => '2006-03-01',
-                'region'   => 'eu-west-3',
-            ]);
+            // $s3 = new \Aws\S3\S3Client([
+            //     'version'  => '2006-03-01',
+            //     'region'   => 'eu-west-3',
+            // ]);
 
-            $bucket = getenv('S3_CAR_IMAGES_CCAS') ?: die('No "S3_CAR_IMAGES_CCAS" config var in found in env!');
+            // $bucket = getenv('S3_CAR_IMAGES_CCAS') ?: die('No "S3_CAR_IMAGES_CCAS" config var in found in env!');
             $imageFile = $req->files->get('image');
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
 
             // this is needed to safely include the file name as part of the URL
             $safeFilename = $slugger->slug($originalFilename);
             $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-            $upload = $s3->upload($bucket, $newFilename, fopen($imageFile, 'rb'), 'public-read');
+            // $upload = $s3->upload($bucket, $newFilename, fopen($imageFile, 'rb'), 'public-read');
 
-            // $imageFile->move(
-            //     $this->getParameter('car_directory'),
-            //     $newFilename
-            // );
-            $s3Key = $upload->get('ObjectURL');
-            $carAd->setImage($s3Key);
+            $imageFile->move(
+                $this->getParameter('car_directory'),
+                $newFilename
+            );
+
+            // $s3Key = $upload->get('ObjectURL');
+            $carAd->setImage($newFilename);
             $em->persist($carAd);
             $em->flush();
 
-            $data = ["CarAd_image" => $s3Key];
+            $data = ["CarAd_image" => $newFilename];
 
             return $this->json(
                 $data,
